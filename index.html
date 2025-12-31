@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шоколадная фабрика Вонки | Игры</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Модальное окно регистрации -->
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <h2>🎫 ЗОЛОТОЙ БИЛЕТ 🎫</h2>
+            <p style="font-size: 1.5rem; margin: 25px 0; color: #4a1c03; font-weight: bold; line-height: 1.6;">
+                Добро пожаловать на легендарную Шоколадную Фабрику Вонки!<br>
+                Введите номер вашего Золотого Билета и имя для начала волшебства!
+            </p>
+            <input type="text" id="ticketNumber" placeholder="Номер билета (1-1000)" maxlength="4">
+            <input type="text" id="playerName" placeholder="Ваше полное имя">
+            <button onclick="registerPlayer()">🚀 НАЧАТЬ ВОЛШЕБСТВО! 🍫</button>
+            <p id="registrationError" style="color: #ff4444; margin-top: 20px; font-weight: bold; font-size: 1.1rem;"></p>
+            <p style="margin-top: 25px; font-size: 0.9rem; color: #4a1c03; font-style: italic;">
+                *Каждый билет даёт уникальный стартовый бонус!
+            </p>
+        </div>
+    </div>
+
+    <!-- Поздравление с полной прокачкой -->
+    <div id="congratulations" class="modal">
+        <div class="modal-content">
+            <h2>🎉 ЛЕГЕНДАРНАЯ ПОБЕДА! 🎉</h2>
+            <div style="font-size: 6rem; margin: 30px 0;">🎅🏼✨</div>
+            <p style="font-size: 1.8rem; margin: 25px 0; color: #4a1c03; font-weight: bold;">
+                От Деда Мороза и Вилли Вонки:
+            </p>
+            <div style="background: rgba(255, 255, 255, 0.9); padding: 25px; border-radius: 15px; border: 5px solid #ffd700; margin: 20px 0;">
+                <p style="font-size: 1.4rem; margin: 15px 0; color: #8b4513; font-style: italic; line-height: 1.6;">
+                    "Дорогой сладкоежка! Ты построил самую великолепную шоколадную фабрику в истории!<br>
+                    Твоё мастерство и упорство впечатляют даже самых опытных кондитеров!<br>
+                    Пусть каждый твой день будет наполнен волшебством и сладкими чудесами!"
+                </p>
+            </div>
+            <p style="font-size: 1.6rem; margin: 25px 0; color: #ff1493; font-weight: bold;">
+                🏆 Ты получил титул "ВЕЛИКИЙ КОНДИТЕР"! 🏆
+            </p>
+            <button onclick="closeCongratulations()">🎊 УРА! ПРАЗДНОВАТЬ! 🎊</button>
+        </div>
+    </div>
+
+    <!-- Верхняя панель -->
+    <div class="top-bar">
+        <div class="player-info" id="playerInfo">
+            <span>👑</span>
+            <span id="playerNameDisplay">ГОСТЬ</span>
+            <span style="color: #ffd700;">|</span>
+            <span>БИЛЕТ №</span>
+            <span id="ticketNumberDisplay" style="color: #ff1493;">0000</span>
+        </div>
+        <div class="currency">
+            <div class="currency-item">
+                <span class="currency-icon">🍫</span>
+                <span class="currency-value" id="chocolateCount">0</span>
+                <span style="font-size: 1rem; color: #ffd700;">ШОКОЛАДКИ</span>
+            </div>
+            <div class="currency-item">
+                <span class="currency-icon">🍬</span>
+                <span class="currency-value" id="candyCount">0</span>
+                <span style="font-size: 1rem; color: #ffd700;">КОНФЕТЫ</span>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <h1>🍫 ШОКОЛАДНАЯ ФАБРИКА ВОНКИ 🍭</h1>
+        <p class="subtitle">ГДЕ ВОЛШЕБСТВО ВСТРЕЧАЕТСЯ СО СЛАДОСТЯМИ!</p>
+    </header>
+
+    <div class="container">
+        <!-- Магазин прокачки -->
+        <h2 style="text-align: center; margin-top: 50px; color: #ffd700; font-size: 4rem;">🏭 ПРОКАЧКА ФАБРИКИ</h2>
+        <div class="shop">
+            <div class="shop-item" id="shopItem1">
+                <div class="upgrade-icon">⚙️🏭</div>
+                <h3 style="color: #8b4513; margin-bottom: 15px;">Уровень 1: ШОКОЛАДНЫЙ КОНВЕЙЕР</h3>
+                <p style="margin: 15px 0; color: #666; font-size: 1.1rem; line-height: 1.5;">
+                    Автоматическая система производства конфет
+                </p>
+                <div class="upgrade-price">💎 ЦЕНА: 200 🍫</div>
+                <button id="upgrade1" onclick="buyUpgrade(1)">КУПИТЬ УЛУЧШЕНИЕ</button>
+            </div>
+            <div class="shop-item" id="shopItem2">
+                <div class="upgrade-icon">🌊🍫</div>
+                <h3 style="color: #8b4513; margin-bottom: 15px;">Уровень 2: ВОДОПАД ИЗ ШОКОЛАДА</h3>
+                <p style="margin: 15px 0; color: #666; font-size: 1.1rem; line-height: 1.5;">
+                    Волшебный водопад увеличивает производство на 50%
+                </p>
+                <div class="upgrade-price">💎 ЦЕНА: 500 🍫</div>
+                <button id="upgrade2" onclick="buyUpgrade(2)" disabled>КУПИТЬ УЛУЧШЕНИЕ</button>
+            </div>
+            <div class="shop-item" id="shopItem3">
+                <div class="upgrade-icon">🚂✨</div>
+                <h3 style="color: #8b4513; margin-bottom: 15px;">Уровень 3: СЛАДКИЙ ЭКСПРЕСС</h3>
+                <p style="margin: 15px 0; color: #666; font-size: 1.1rem; line-height: 1.5;">
+                    Сверхскоростная доставка по всей фабрике
+                </p>
+                <div class="upgrade-price">💎 ЦЕНА: 1000 🍫</div>
+                <button id="upgrade3" onclick="buyUpgrade(3)" disabled>КУПИТЬ УЛУЧШЕНИЕ</button>
+            </div>
+            <div class="shop-item" id="shopItem4">
+                <div class="upgrade-icon">🏰🌟</div>
+                <h3 style="color: #8b4513; margin-bottom: 15px;">Уровень 4: ВОЛШЕБНЫЙ ДВОРЕЦ</h3>
+                <p style="margin: 15px 0; color: #666; font-size: 1.1rem; line-height: 1.5;">
+                    Легендарный дворец из чистого шоколада
+                </p>
+                <div class="upgrade-price">💎 ЦЕНА: 2000 🍫</div>
+                <button id="upgrade4" onclick="buyUpgrade(4)" disabled>КУПИТЬ УЛУЧШЕНИЕ</button>
+            </div>
+        </div>
+
+        <!-- Игровое меню -->
+        <div class="games-menu">
+            <button class="game-btn" data-game="candyGame">
+                <span style="font-size: 2.5rem;">🍬</span>
+                <div style="text-align: left;">
+                    <div>ШТУРМ КОНФЕТ</div>
+                    <div style="font-size: 0.9rem; color: #ffd700;">СОБИРАЙ КОНФЕТЫ!</div>
+                </div>
+            </button>
+            <button class="game-btn" data-game="chocolateClicker">
+                <span style="font-size: 2.5rem;">🍫</span>
+                <div style="text-align: left;">
+                    <div>ШОКОЛАДНЫЙ КЛИКЕР</div>
+                    <div style="font-size: 0.9rem; color: #ffd700;">КЛИКАЙ И ЗАРАБАТЫВАЙ!</div>
+                </div>
+            </button>
+            <button class="game-btn" data-game="chocolatePuzzle">
+                <span style="font-size: 2.5rem;">🧪</span>
+                <div style="text-align: left;">
+                    <div>ШОКОЛАДНАЯ ГОЛОВОЛОМКА</div>
+                    <div style="font-size: 0.9rem; color: #ffd700;">СОБЕРИ РЕЦЕПТ!</div>
+                </div>
+            </button>
+            <button class="game-btn" data-game="findTicket">
+                <span style="font-size: 2.5rem;">🎫</span>
+                <div style="text-align: left;">
+                    <div>ОХОТА ЗА БИЛЕТАМИ</div>
+                    <div style="font-size: 0.9rem; color: #ffd700;">НАЙДИ ЗОЛОТЫЕ БИЛЕТЫ!</div>
+                </div>
+            </button>
+        </div>
+
+        <!-- Кнопка обмена -->
+        <div class="exchange-container">
+            <div style="font-size: 1.4rem; margin-bottom: 20px; color: #4a1c03; font-weight: bold;">
+                💰 ОБМЕН ВАЛЮТЫ: 2 КОНФЕТЫ = 1 ШОКОЛАДКА 💰
+            </div>
+            <button class="exchange-btn" onclick="exchangeCandies()">
+                <span>🍬→🍫 ОБМЕНЯТЬ КОНФЕТЫ</span>
+            </button>
+            <p style="margin-top: 20px; color: #4a1c03; font-size: 1.1rem;">
+                Доступно для обмена: <span id="availableCandies" style="font-weight: bold; color: #ff1493;">0</span> конфет
+            </p>
+        </div>
+
+        <!-- Игра 1: Сбор конфет -->
+        <section id="candyGame" class="game-section">
+            <h2>🍬 ШТУРМ КОНФЕТНОГО ЦАРСТВА 🍬</h2>
+            <div class="game-instructions">
+                <strong>🎯 ЦЕЛЬ ИГРЫ:</strong> Собери максимальное количество конфет за 30 секунд!<br>
+                <strong>✨ ОСОБЕННОСТИ:</strong><br>
+                • Золотые конфеты 🎁 дают +3 очка<br>
+                • Серебряные конфеты 🍡 дают +2 очка<br>
+                • Обычные конфеты 🍬 дают +1 очко<br>
+                • Чёрные конфеты 💀 отнимают 2 очка!<br>
+                • Скорость увеличивается каждые 5 секунд!
+            </div>
+            <div class="game-stats">
+                <div class="stat-item">
+                    🍬 СОБРАНО: <span id="candyScore" style="color: #ffd700; font-size: 2rem;">0</span>
+                </div>
+                <div class="stat-item">
+                    ⏱️ ВРЕМЯ: <span id="candyTimer" style="color: #ff1493; font-size: 2rem;">30</span> СЕК
+                </div>
+                <div class="stat-item">
+                    📊 УРОВЕНЬ: <span id="candyLevel" style="color: #4CAF50; font-size: 2rem;">1</span>
+                </div>
+                <div class="stat-item">
+                    ⚡ РЕКОРД: <span id="candyRecord" style="color: #2196F3; font-size: 2rem;">0</span>
+                </div>
+            </div>
+            <div class="game-area" id="candyGameArea">
+                <button id="startCandyGame" style="
+                    font-size: 2rem; 
+                    padding: 25px 50px; 
+                    margin: 50px auto;
+                    background: linear-gradient(145deg, #ff1493, #ffd700);
+                    color: white;
+                    border: none;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    border: 6px solid white;
+                    box-shadow: 0 15px 35px rgba(255, 20, 147, 0.5);
+                    transition: all 0.3s;
+                    display: block;
+                ">
+                    🚀 НАЧАТЬ ШТУРМ КОНФЕТ!
+                </button>
+            </div>
+        </section>
+
+        <!-- Игра 2: Шоколадный кликер -->
+        <section id="chocolateClicker" class="game-section">
+            <h2>🍫 ВЕЛИКИЙ ШОКОЛАДНЫЙ КЛИКЕР 🍫</h2>
+            <div class="game-instructions">
+                <strong>🎯 ЦЕЛЬ ИГРЫ:</strong> Нажмите на шоколадку, чтобы зарабатывать шоколадки!<br>
+                <strong>✨ СТРАТЕГИЯ:</strong><br>
+                • Покупайте улучшения для автоматического заработка<br>
+                • Каждые 500 кликов сложность увеличивается<br>
+                • Сохраняйте шоколадки для покупки улучшений фабрики<br>
+                • Соревнуйтесь за звание лучшего кондитера!
+            </div>
+            <div class="game-area">
+                <div id="chocolate" onclick="clickChocolate()" title="КЛИКАЙ ДЛЯ ЗАРАБОТКА!"></div>
+                <div id="clickerCounter" style="margin: 30px 0;">0 🍫</div>
+                
+                <div class="game-stats">
+                    <div class="stat-item">
+                        ⚡ АВТО-КЛИКОВ/СЕК: <span id="perSecond">0</span>
+                    </div>
+                    <div class="stat-item">
+                        🎯 МНОЖИТЕЛЬ: <span id="clickMultiplier">1x</span>
+                    </div>
+                    <div class="stat-item">
+                        🔥 ВСЕГО КЛИКОВ: <span id="totalClicks">0</span>
+                    </div>
+                    <div class="stat-item">
+                        💎 УРОВЕНЬ СЛОЖНОСТИ: <span id="difficultyLevel">1</span>
+                    </div>
+                </div>
+                
+                <div class="upgrades-grid">
+                    <button class="upgrade-btn" onclick="buyUpgradeClicker('auto')" id="autoClickerBtn">
+                        <span style="font-size: 2rem;">🤖</span>
+                        <div style="font-size: 1.2rem; font-weight: bold;">АВТО-КЛИКЕР</div>
+                        <div style="font-size: 0.9rem;">+1 клик/сек</div>
+                        <div style="font-size: 1rem; color: #ffd700; margin-top: 5px;">Цена: <span id="autoPrice">100</span> 🍫</div>
+                    </button>
+                    <button class="upgrade-btn" onclick="buyUpgradeClicker('double')" id="doubleClickBtn">
+                        <span style="font-size: 2rem;">✨</span>
+                        <div style="font-size: 1.2rem; font-weight: bold;">УДВОЕНИЕ</div>
+                        <div style="font-size: 0.9rem;">2x за клик</div>
+                        <div style="font-size: 1rem; color: #ffd700; margin-top: 5px;">Цена: <span id="doublePrice">500</span> 🍫</div>
+                    </button>
+                    <button class="upgrade-btn" onclick="buyUpgradeClicker('triple')" id="tripleClickBtn">
+                        <span style="font-size: 2rem;">⚡</span>
+                        <div style="font-size: 1.2rem; font-weight: bold;">ТРОЕНИЕ</div>
+                        <div style="font-size: 0.9rem;">3x за клик</div>
+                        <div style="font-size: 1rem; color: #ffd700; margin-top: 5px;">Цена: <span id="triplePrice">2000</span> 🍫</div>
+                    </button>
+                    <button class="upgrade-btn" onclick="buyUpgradeClicker('mega')" id="megaClickBtn">
+                        <span style="font-size: 2rem;">💥</span>
+                        <div style="font-size: 1.2rem; font-weight: bold;">МЕГА-КЛИКЕР</div>
+                        <div style="font-size: 0.9rem;">10x за клик</div>
+                        <div style="font-size: 1rem; color: #ffd700; margin-top: 5px;">Цена: <span id="megaPrice">5000</span> 🍫</div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Игра 3: Шоколадная головоломка -->
+        <section id="chocolatePuzzle" class="game-section">
+            <h2>🧪 ШОКОЛАДНАЯ ГОЛОВОЛОМКА 🧪</h2>
+            <div class="game-instructions">
+                <strong>🎯 ЦЕЛЬ ИГРЫ:</strong> Соберите правильный рецепт шоколада!<br>
+                <strong>✨ КАК ИГРАТЬ:</strong><br>
+                1. Перетащите ингредиенты из панели в котёл<br>
+                2. Соберите все ингредиенты из рецепта<br>
+                3. Нажмите "Проверить рецепт"<br>
+                4. Каждый правильный рецепт даёт 50-100 🍫<br>
+                5. Каждая ошибка отнимает 5 секунд
+            </div>
+            
+            <div class="puzzle-stats">
+                <div class="stat-item">
+                    🧪 РЕЦЕПТОВ СОБРАНО: <span id="recipesCompleted">0</span>
+                </div>
+                <div class="stat-item">
+                    ⏱️ ВРЕМЯ: <span id="puzzleTimer">120</span> СЕК
+                </div>
+                <div class="stat-item">
+                    ✅ ПРАВИЛЬНЫХ: <span id="correctIngredients">0</span>/<span id="totalIngredients">6</span>
+                </div>
+                <div class="stat-item">
+                    🎁 НАГРАДА: <span id="puzzleReward">0</span> 🍫
+                </div>
+            </div>
+            
+            <div class="puzzle-game-area">
+                <div class="ingredients-panel">
+                    <h3 style="color: #8b4513; margin-bottom: 20px; text-align: center;">📦 ИНГРЕДИЕНТЫ</h3>
+                    <div class="ingredients-list" id="ingredientsList">
+                        <!-- Ингредиенты будут добавлены через JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="chocolate-cauldron" id="chocolateCauldron">
+                    <div class="cauldron-content" id="cauldronContent">
+                        <p style="color: white; text-align: center; font-size: 1.2rem; padding: 20px;">
+                            Перетащите ингредиенты сюда!
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="recipe-display">
+                    <h3 style="color: #ffd700; margin-bottom: 20px; text-align: center;">📜 ТЕКУЩИЙ РЕЦЕПТ</h3>
+                    <div id="recipeDisplay">
+                        <!-- Рецепт будет добавлен через JavaScript -->
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255, 255, 255, 0.1); border-radius: 10px;">
+                        <div style="color: #ffd700; font-weight: bold; margin-bottom: 10px;">🏆 НАГРАДА:</div>
+                        <div style="color: white; font-size: 1.2rem;"><span id="currentReward">50</span> 🍫 за правильный рецепт</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="puzzle-controls">
+                <button class="puzzle-btn" onclick="startPuzzleGame()" id="startPuzzleBtn">
+                    🚀 НАЧАТЬ ГОЛОВОЛОМКУ
+                </button>
+                <button class="puzzle-btn" onclick="checkRecipe()" id="checkRecipeBtn" disabled>
+                    ✅ ПРОВЕРИТЬ РЕЦЕПТ
+                </button>
+                <button class="puzzle-btn" onclick="resetPuzzle()" id="resetPuzzleBtn">
+                    🔄 НОВЫЙ РЕЦЕПТ
+                </button>
+                <button class="puzzle-btn" onclick="hintRecipe()" id="hintBtn">
+                    💡 ПОДСКАЗКА (10 🍫)
+                </button>
+            </div>
+            
+            <div id="puzzleStatus" style="
+                margin-top: 25px;
+                padding: 20px;
+                border-radius: 15px;
+                background: rgba(255, 215, 0, 0.2);
+                border: 3px solid #ffd700;
+                font-size: 1.3rem;
+                color: #8b4513;
+                text-align: center;
+                font-weight: bold;
+            ">
+                🎮 ГОТОВЫ К СОЗДАНИЮ ШОКОЛАДА?
+            </div>
+        </section>
+
+        <!-- Игра 4: Найди Золотой Билет -->
+        <section id="findTicket" class="game-section">
+            <h2>🎫 ВЕЛИКАЯ ОХОТА ЗА БИЛЕТАМИ 🎫</h2>
+            <div class="game-instructions">
+                <strong>🎯 ЦЕЛЬ ИГРЫ:</strong> Найдите настоящие золотые билеты и избегайте подделок!<br>
+                <strong>✨ ОСОБЕННОСТИ:</strong><br>
+                • Золотые билеты 🎫 дают +5 🍫<br>
+                • Серебряные подделки 💀 отнимают 3 🍫<br>
+                • Сложность увеличивается с уровнем фабрики<br>
+                • Соберите 15 билетов для бонуса x2!<br>
+                • У вас есть 45 секунд на охоту!
+            </div>
+            <div class="game-stats">
+                <div class="stat-item">
+                    🎫 НАЙДЕНО: <span id="ticketsFound">0</span>/<span id="ticketsNeeded">15</span>
+                </div>
+                <div class="stat-item">
+                    ⏱️ ВРЕМЯ: <span id="ticketTimer">45</span> СЕК
+                </div>
+                <div class="stat-item">
+                    🏆 СЛОЖНОСТЬ: <span id="ticketDifficulty">НОВИЧОК</span>
+                </div>
+                <div class="stat-item">
+                    💰 БОНУС: <span id="ticketBonus">x1</span>
+                </div>
+            </div>
+            <div class="game-area" id="ticketGameArea">
+                <button id="startTicketGame" style="
+                    font-size: 2rem; 
+                    padding: 25px 50px; 
+                    margin: 50px auto;
+                    background: linear-gradient(145deg, #2196F3, #4CAF50);
+                    color: white;
+                    border: none;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    border: 6px solid white;
+                    box-shadow: 0 15px 35px rgba(33, 150, 243, 0.5);
+                    transition: all 0.3s;
+                    display: block;
+                ">
+                    🚀 НАЧАТЬ ОХОТУ ЗА БИЛЕТАМИ!
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p style="font-size: 1.4rem; margin-bottom: 20px; font-weight: bold;">
+            © 2023 ШОКОЛАДНАЯ ФАБРИКА ВИЛЛИ ВОНКИ. ВСЕ ПРАВА ЗАЩИЩЕНЫ.
+        </p>
+        <div class="factory-level" id="factoryLevelText">
+            🏭 ФАБРИКА: БАЗОВЫЙ УРОВЕНЬ
+        </div>
+        <div style="margin: 30px 0; font-size: 1.3rem; display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                🎮 ИГР СЫГРАНО: <span id="totalGames" style="color: #ffd700;">0</span>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                🏆 РЕКОРД: <span id="highScore" style="color: #ff1493;">0</span> 🍫
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                ⭐ УРОВЕНЬ: <span id="playerLevel" style="color: #4CAF50;">1</span>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                🕐 ВРЕМЯ В ИГРЕ: <span id="playTime" style="color: #2196F3;">0</span> МИН
+            </div>
+        </div>
+        <button class="reset-btn" onclick="resetGame()">
+            ⚠️ СБРОСИТЬ ВЕСЬ ПРОГРЕСС ⚠️
+        </button>
+        <p style="margin-top: 30px; font-size: 1rem; color: #ffd700; font-style: italic; max-width: 800px; margin-left: auto; margin-right: auto;">
+            "Помни: чистота — залог успеха, но шоколадные пятна — знак настоящего мастера! 
+            Мечтай по-крупному, работай усердно, и пусть твоя жизнь будет слаще самого лучшего шоколада!"
+        </p>
+    </footer>
+
+    <!-- Эффект прокачки -->
+    <div id="upgradeEffect" class="upgrade-effect"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
